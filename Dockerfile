@@ -1,17 +1,15 @@
 FROM debian:buster-slim
 
-ENV CELLRANGER_VER 3.1.0
+ENV CELLRANGERATAC_VER 1.2.0
 
 # Pre-downloaded files:
-# cellranger: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest
-COPY cellranger-$CELLRANGER_VER.tar.gz /opt/cellranger-$CELLRANGER_VER.tar.gz
+# cellranger atac: https://support.10xgenomics.com/single-cell-atac/software/downloads/latest
+COPY cellranger-atac-$CELLRANGERATAC_VER.tar.gz /opt/cellranger-atac-$CELLRANGERATAC_VER.tar.gz
 # bcl2fastq2: https://support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html
 COPY bcl2fastq2-v2-20-0-linux-x86-64.zip /tmp/bcl2fastq2-v2-20-0-linux-x86-64.zip
 
 RUN apt-get update && \
-    # Need to run ps
-    apt-get -y install procps && \
-    apt-get install -y bsdtar p7zip-full cpio wget unzip
+    apt-get install -y bsdtar p7zip-full cpio wget unzip procps
 
 # Install bcl2fastq by extracting rpm
 RUN  \
@@ -22,10 +20,11 @@ RUN  \
     mv usr/local/bin/bcl2fastq /usr/bin && \
     rm bcl2fastq2*
 
-# Install CellRanger from tgz file
+# Install Cell Ranger ATAC from tgz file
 RUN \
   cd /opt && \
-  bsdtar -xzvf cellranger-$CELLRANGER_VER.tar.gz && \
-  export PATH=/opt/cellranger-$CELLRANGER_VER:$PATH && \
-  ln -s /opt/cellranger-$CELLRANGER_VER/cellranger /usr/bin/cellranger && \
-  rm -rf /opt/cellranger-$CELLRANGER_VER.tar.gz
+  bsdtar -xzvf cellranger-atac-$CELLRANGERATAC_VER.tar.gz && \
+  export PATH=/opt/cellranger-atac-$CELLRANGERATAC_VER:$PATH && \
+  ln -s /opt/cellranger-atac-$CELLRANGERATAC_VER/cellranger-atac /usr/bin/cellranger-atac && \
+  rm -rf /opt/cellranger-atac-$CELLRANGERATAC_VER.tar.gz
+

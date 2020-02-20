@@ -5,12 +5,12 @@ import java.nio.file.Paths
 //////////////////////////////////////////////////////
 //  process imports:
 
-include SC__CELLRANGER__COUNT_WITH_METADATA   from './../processes/count'    params(params)
+include SC__CELLRANGER_ATAC__COUNT_WITH_METADATA   from './../processes/count'    params(params)
 
 //////////////////////////////////////////////////////
 //  Define the workflow 
 
-workflow CELLRANGER_COUNT_WITH_METADATA {
+workflow CELLRANGER_ATAC_COUNT_WITH_METADATA {
 
     take:
         metadata
@@ -31,9 +31,10 @@ workflow CELLRANGER_COUNT_WITH_METADATA {
                 row.expect_cells
             )
         }
-        SC__CELLRANGER__COUNT_WITH_METADATA( data )
+        SC__CELLRANGER_ATAC__COUNT_WITH_METADATA( data )
 
     emit:
-        SC__CELLRANGER__COUNT_WITH_METADATA.out
+        SC__CELLRANGER_ATAC__COUNT_WITH_METADATA.out
 
 }
+

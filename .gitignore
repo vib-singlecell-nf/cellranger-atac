@@ -8,6 +8,7 @@
 *.pyc
 *.html
 *egg*
+.vscode
 .nextflow
 .nextflow*
 data
@@ -23,3 +24,5 @@ work/
 out/
 tests/
 debug/
+*.swp
+*.swo
