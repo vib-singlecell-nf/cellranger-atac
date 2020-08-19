@@ -7,6 +7,7 @@ def runCellRangerAtacCount = {
     sample,
     fastqs,
     processParams,
+    task,
     expectCells = null ->
     return (
         """
@@ -21,20 +22,19 @@ def runCellRangerAtacCount = {
             ${(processParams.containsKey('dimReduce')) ? '--dim-reduce ' + processParams.dimReduce: ''} \
             ${(processParams.containsKey('downsample')) ? '--downsample ' + processParams.downsample: ''} \
             ${(processParams.containsKey('lanes')) ? '--lanes ' + processParams.lanes: ''} \
-            ${(processParams.containsKey('localCores')) ? '--localcores ' + processParams.localCores: ''} \
-            ${(processParams.containsKey('localMem')) ? '--localmem ' + processParams.localMem: ''} \
+            --localcores=${task.cpus} \
+            --localmem=${task.memory.toGiga()}
         """
     )
 }
 
 process SC__CELLRANGER_ATAC__COUNT {
 
-    label toolParams.labels.processExecutor
     cache 'deep'
     container toolParams.container
     publishDir "${params.global.outdir}/counts", mode: 'link', overwrite: true
-    clusterOptions "-l nodes=1:ppn=${toolParams.count.ppn} -l pmem=${toolParams.count.pmem} -l walltime=${toolParams.count.walltime} -A ${params.global.qsubaccount} -m abe -M ${params.global.qsubemail}"
     maxForks = toolParams.count.maxForks
+    label 'compute_resources__cellranger'
 
     input:
         file(reference)
@@ -53,19 +53,19 @@ process SC__CELLRANGER_ATAC__COUNT {
             sampleId,
             sampleId,
             fastqs,
-            processParams
+            processParams,
+            task
         )
 
 }
 
 process SC__CELLRANGER_ATAC__COUNT_WITH_METADATA {
 
-    label toolParams.labels.processExecutor
     cache 'deep'
     container toolParams.container
     publishDir "${params.global.outdir}/counts", mode: 'link', overwrite: true
-    clusterOptions "-l nodes=1:ppn=${toolParams.count.ppn} -l pmem=${toolParams.count.pmem} -l walltime=${toolParams.count.walltime} -A ${params.global.qsubaccount} -m abe -M ${params.global.qsubemail}"
     maxForks = toolParams.count.maxForks
+    label 'compute_resources__cellranger'
 
     input:
         tuple \
@@ -87,6 +87,7 @@ process SC__CELLRANGER_ATAC__COUNT_WITH_METADATA {
             samplePrefix,
             fastqs,
             processParams,
+            task,
             expectCells
         )
 

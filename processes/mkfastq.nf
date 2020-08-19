@@ -6,6 +6,7 @@ process SC__CELLRANGER_ATAC__MKFASTQ {
 
     publishDir "${params.global.outdir}/fastqs", saveAs: { filename -> dirname = filename =~ /(.*)_fastqOut/; "${dirname[0][1]}" }, mode: 'link', overwrite: true
     container toolParams.container
+    label 'compute_resources__cellranger'
 
     input:
         file(csv)
@@ -26,9 +27,9 @@ process SC__CELLRANGER_ATAC__MKFASTQ {
             ${(toolParams.mkfastq.containsKey('deleteUndetermined')) ? '--delete-undetermined ' + toolParams.mkfastq.deleteUndetermined: ''} \
             ${(toolParams.mkfastq.containsKey('outputDir')) ? '--output-dir ' + toolParams.mkfastq.outputDir: ''} \
             ${(toolParams.mkfastq.containsKey('project')) ? '--project ' + toolParams.mkfastq.project: ''} \
-            ${(toolParams.mkfastq.containsKey('jobMode')) ? '--jobmode ' + toolParams.mkfastq.jobMode: ''} \
-            ${(toolParams.mkfastq.containsKey('localCores')) ? '--localcores ' + toolParams.mkfastq.localCores: ''} \
-            ${(toolParams.mkfastq.containsKey('localMem')) ? '--localmem ' + toolParams.mkfastq.localMem: ''}
+            --jobmode=local \
+            --localcores=${task.cpus} \
+            --localmem=${task.memory.toGiga()}
         
         for sample in \$(tail -n+2 ${csv} | cut -f2 -d','); do
             ln -s ${(params.global.containsKey('outputDir')) ? params.global.outputDir + "*/\${sample}" : "*/outs/fastq_path/*/\${sample}"} \${sample}_fastqOut
