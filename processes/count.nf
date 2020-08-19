@@ -33,7 +33,6 @@ process SC__CELLRANGER_ATAC__COUNT {
     cache 'deep'
     container toolParams.container
     publishDir "${params.global.outdir}/counts", mode: 'link', overwrite: true
-    maxForks = toolParams.count.maxForks
     label 'compute_resources__cellranger'
 
     input:
@@ -64,7 +63,6 @@ process SC__CELLRANGER_ATAC__COUNT_WITH_METADATA {
     cache 'deep'
     container toolParams.container
     publishDir "${params.global.outdir}/counts", mode: 'link', overwrite: true
-    maxForks = toolParams.count.maxForks
     label 'compute_resources__cellranger'
 
     input:
