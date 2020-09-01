@@ -33,7 +33,7 @@ process SC__CELLRANGER_ATAC__COUNT {
     cache 'deep'
     container toolParams.container
     publishDir "${params.global.outdir}/counts", mode: 'link', overwrite: true
-    label 'compute_resources__cellranger'
+    label 'compute_resources__cellranger_count'
 
     input:
         file(reference)
